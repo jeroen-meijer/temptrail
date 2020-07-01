@@ -1,0 +1,28 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch",
+      "program": "bin/temptrail.dart",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "Launch (help)",
+      "program": "bin/temptrail.dart",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--help"]
+    },
+    {
+      "name": "Launch (verbose)",
+      "program": "bin/temptrail.dart",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--verbose"]
+    }
+  ]
+}
