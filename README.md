@@ -1,4 +1,4 @@
-# TempTrail (WIP, DOES NOT WORK)
+# TempTrail
 
 **A CLI for Mac OS that uses AnyBar to show when your Mac is thermal throttling..**
 
