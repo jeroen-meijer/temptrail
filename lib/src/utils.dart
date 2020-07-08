@@ -41,14 +41,17 @@ extension NumUtils on num {
     @required int amount,
     String paddingCharacter = '0',
   }) {
-    return _getStringPadding(amount: amount, paddingCharacter: paddingCharacter) + toString();
+    return _getStringPadding(
+            amount: amount, paddingCharacter: paddingCharacter) +
+        toString();
   }
 
   String padRight({
     @required int amount,
     String paddingCharacter = '0',
   }) {
-    return toString() + _getStringPadding(amount: amount, paddingCharacter: paddingCharacter);
+    return toString() +
+        _getStringPadding(amount: amount, paddingCharacter: paddingCharacter);
   }
 }
 

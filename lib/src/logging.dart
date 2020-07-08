@@ -15,6 +15,8 @@ LogCallback get trace => logger.trace;
 extension LoggerUtils on Logger {
   static Logger fromConfig(Config config) {
     final ansi = Ansi(config.ansi);
-    return config.verbose ? Logger.verbose(ansi: ansi) : Logger.standard(ansi: ansi);
+    return config.verbose
+        ? Logger.verbose(ansi: ansi)
+        : Logger.standard(ansi: ansi);
   }
 }
