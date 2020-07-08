@@ -1,3 +1,4 @@
+// 🌎 Project imports:
 import 'package:temptrail/src/logging.dart';
 
 typedef ColorWrapper = String Function(Object value);
@@ -13,4 +14,5 @@ final yellow = _wrap(logger.ansi.yellow);
 final none = _wrap(logger.ansi.none);
 final bold = _wrap(logger.ansi.bold);
 
-ColorWrapper _wrap(String ansiModifier) => (value) => '$ansiModifier$value${logger.ansi.none}';
+ColorWrapper _wrap(String ansiModifier) =>
+    (value) => '$ansiModifier$value${logger.ansi.none}';

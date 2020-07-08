@@ -1,12 +1,14 @@
+// 🎯 Dart imports:
 import 'dart:async';
 import 'dart:io' as io;
 
-import 'package:temptrail/temptrail.dart';
+// 🌎 Project imports:
 import 'package:temptrail/src/cli_app.dart';
 import 'package:temptrail/src/colors.dart';
 import 'package:temptrail/src/config.dart';
 import 'package:temptrail/src/logging.dart';
 import 'package:temptrail/src/version.dart';
+import 'package:temptrail/temptrail.dart';
 
 Future<void> main(List<String> args) async {
   Config config;
@@ -45,7 +47,7 @@ Future<void> main(List<String> args) async {
     return await app.run();
   } catch (e) {
     trace('Exception occurred while running app.run().');
-    log(red('Error while running: ${bold(e.message)}'));
+    log(red('Error while running: ${bold(e)}'));
     io.exit(1);
   }
 }

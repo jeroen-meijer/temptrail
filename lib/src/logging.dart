@@ -1,4 +1,7 @@
+// 📦 Package imports:
 import 'package:cli_util/cli_logging.dart';
+
+// 🌎 Project imports:
 import 'package:temptrail/src/config.dart';
 
 typedef LogCallback = void Function(String);

@@ -1,12 +1,8 @@
 ## 1.1.0
 
-- Fixed bug where verbose mode would crash the app.
-- Fixed several other minor bugs.
-- Improved API error handling.
-- Improved error logging.
-- Improved verbose logging.
-- Improved CLI argument parsing.
+- First working version.
 
 ## 1.0.0
 
-- Initial version.
+- Initial project files.
+- Main infrastructure. Non-functional.
