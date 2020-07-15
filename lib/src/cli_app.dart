@@ -1,13 +1,10 @@
-// 🎯 Dart imports:
 import 'dart:async';
+import 'dart:io' as io;
+import 'dart:math';
 
-// 📦 Package imports:
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
-
-// 🌎 Project imports:
 import 'package:temptrail/src/any_bar_color.dart';
-import 'package:temptrail/src/colors.dart';
 import 'package:temptrail/src/config.dart';
 import 'package:temptrail/src/logging.dart';
 import 'package:temptrail/src/system_service.dart';
@@ -18,6 +15,8 @@ class CliApp {
 
   final Config _config;
   final SystemService _systemService;
+
+  StreamSubscription<io.ProcessSignal> _exitSignalStreamSubscription;
 
   AnyBarColor _getAnyBarColorForSpeedLimit(int speedLimit) {
     const limitColors = <int, AnyBarColor>{
@@ -39,28 +38,60 @@ class CliApp {
   }
 
   Future<void> _refresh() async {
-    trace('Fetching speed limit...');
-    final speedLimit = await _systemService.fetchCpuSpeedLimit();
+    try {
+      drawDivider();
+      log(yellow('Refreshing at ${DateTime.now()}'));
+      trace('Fetching speed limit...');
+      final speedLimit = await _systemService.fetchCpuSpeedLimit();
 
-    log('Speed limit: $speedLimit%');
-    final color = _getAnyBarColorForSpeedLimit(speedLimit);
+      log('Speed limit: ${bold(speedLimit)}%');
+      final color = _getAnyBarColorForSpeedLimit(speedLimit);
 
-    log('Setting color to "${color.value}"...');
-    await _systemService.setAnyBarColor(
-      color: color,
-      host: 'localhost',
-      port: _config.port,
-    );
+      log('Setting color to ${bold(color.value)}...');
+      await _systemService.setAnyBarColor(color);
 
-    log('Refreshed successfully.');
-    log(subtle('-----------------------'));
+      log(green('Refreshed successfully.'));
+    } catch (e) {
+      log(red('Error occurred: ${bold(e)}'));
+
+      if (_config.exitOnError) {
+        log(red('Exit on error is turned on.'));
+        return _quit(errorOccurred: true);
+      }
+
+      log('Ignoring and continuing...');
+    } finally {}
+  }
+
+  Future<void> _quit({bool errorOccurred = false}) async {
+    log(red(bold('Quitting...')));
+    try {
+      log(subtle('Setting AnyBar color to black...'));
+      await _systemService.setAnyBarColor(AnyBarColor.black);
+    } catch (e) {
+      log(subtle('Setting AnyBar color failed.'));
+    }
+    log(bold('Bye.'));
+    io.exit(errorOccurred ? 1 : 0);
   }
 
   Future<void> run() async {
-    unawaited(_refresh());
-    Timer.periodic(Duration(milliseconds: _config.pollingRate), (_) {
-      _refresh();
+    if (_exitSignalStreamSubscription != null) {
+      await _exitSignalStreamSubscription.cancel();
+    }
+
+    _exitSignalStreamSubscription =
+        io.ProcessSignal.sigint.watch().listen((event) {
+      _quit();
     });
+
+    unawaited(_refresh());
+    Timer.periodic(
+      Duration(milliseconds: _config.pollingRate),
+      (_) {
+        _refresh();
+      },
+    );
   }
 
   @override

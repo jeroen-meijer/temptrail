@@ -1,16 +1,15 @@
-// 🎯 Dart imports:
 import 'dart:async';
 import 'dart:io' as io;
 
-// 🌎 Project imports:
 import 'package:temptrail/src/cli_app.dart';
-import 'package:temptrail/src/colors.dart';
 import 'package:temptrail/src/config.dart';
 import 'package:temptrail/src/logging.dart';
 import 'package:temptrail/src/version.dart';
 import 'package:temptrail/temptrail.dart';
 
 Future<void> main(List<String> args) async {
+  log('${yellow(appName)} (version $packageVersion)');
+
   Config config;
 
   try {
@@ -28,13 +27,12 @@ Future<void> main(List<String> args) async {
   logger = LoggerUtils.fromConfig(config);
 
   // Only shows up when verbose mode is enabled.
-  trace(blue('$appName version $packageVersion'));
   trace(magenta('Verbose logging enabled.'));
   trace(noColor('Generated config from args: ${none(config)}'));
   trace('------------------------------------------');
 
   if (config.version) {
-    return printVersion();
+    return;
   }
 
   if (config.help) {
@@ -46,8 +44,8 @@ Future<void> main(List<String> args) async {
   try {
     return await app.run();
   } catch (e) {
-    trace('Exception occurred while running app.run().');
-    log(red('Error while running: ${bold(e)}'));
+    trace('Unexpected exception occurred while running app.run().');
+    log(red('Unexpected while running: ${bold(e)}'));
     io.exit(1);
   }
 }
@@ -62,8 +60,4 @@ to show when your Mac is thermal throttling.
   log('''
 usage: ${bold(executableName)}
 ${Config.usage}''');
-}
-
-void printVersion() {
-  log('${blue(appName)} version $packageVersion');
 }

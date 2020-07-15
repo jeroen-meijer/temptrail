@@ -1,7 +1,5 @@
-// 📦 Package imports:
 import 'package:args/args.dart';
 
-// 🌎 Project imports:
 import 'package:temptrail/src/config.dart';
 
 extension CustomArgs on ArgParser {
@@ -59,6 +57,7 @@ extension CustomArgs on ArgParser {
       help: 'Exit the program when an error occurs.\n'
           'For example, if the AnyBar instance could not \n'
           'be found or updated.',
+      defaultsTo: false,
       negatable: false,
     );
 

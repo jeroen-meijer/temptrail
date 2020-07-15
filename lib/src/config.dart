@@ -1,8 +1,5 @@
-// 📦 Package imports:
 import 'package:args/args.dart';
 import 'package:meta/meta.dart';
-
-// 🌎 Project imports:
 import 'package:temptrail/src/args.dart';
 
 @immutable

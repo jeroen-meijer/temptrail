@@ -1,40 +1,56 @@
-// 🎯 Dart imports:
 import 'dart:convert';
 import 'dart:io';
 
-// 📦 Package imports:
 import 'package:meta/meta.dart';
-
-// 🌎 Project imports:
 import 'package:temptrail/src/any_bar_color.dart';
 import 'package:temptrail/src/logging.dart';
+import 'package:temptrail/temptrail.dart';
 
 abstract class SystemService {
-  factory SystemService.fromPlatform() {
-    trace('Fetching SystemService for platform ${Platform.operatingSystem}...');
+  const SystemService(
+    this.anyBarHost,
+    this.anyBarPort,
+  );
+
+  factory SystemService.fromPlatform({
+    @required String anyBarHost,
+    @required String anyBarPort,
+  }) {
+    assert(anyBarHost != null);
+    assert(anyBarPort != null);
+
+    trace(
+      'Fetching SystemService with anyBarHost "$anyBarHost" '
+      'and anyBarPort "$anyBarPort"'
+      'for platform ${Platform.operatingSystem}...',
+    );
     if (Platform.isMacOS) {
       trace(
         '$_MacSystemService found '
         'for platform ${Platform.operatingSystem}.',
       );
-      return _MacSystemService();
+      return _MacSystemService(anyBarHost, anyBarPort);
     }
 
     trace('No SystemService found for platform ${Platform.operatingSystem}.');
     throw UnimplementedError(
-      'This program does not run on ${Platform.operatingSystem}.',
+      '$appName does not support ${Platform.operatingSystem}.',
     );
   }
 
+  final String anyBarHost;
+  final String anyBarPort;
+
   Future<int> fetchCpuSpeedLimit();
-  Future<void> setAnyBarColor({
-    @required AnyBarColor color,
-    @required String host,
-    @required int port,
-  });
+  Future<void> setAnyBarColor(AnyBarColor color);
 }
 
-class _MacSystemService implements SystemService {
+class _MacSystemService extends SystemService {
+  const _MacSystemService(
+    String anyBarHost,
+    String anyBarPort,
+  ) : super(anyBarHost, anyBarPort);
+
   @override
   Future<int> fetchCpuSpeedLimit() async {
     trace('Running fetchCpuSpeedLimit');
@@ -100,15 +116,8 @@ class _MacSystemService implements SystemService {
   }
 
   @override
-  Future<void> setAnyBarColor({
-    @required AnyBarColor color,
-    @required String host,
-    @required int port,
-  }) async {
-    trace(
-      'Running setAnyBarColor with '
-      'color $color, host $host and port $port',
-    );
+  Future<void> setAnyBarColor(AnyBarColor color) async {
+    trace('Running setAnyBarColor with color $color');
 
     const script = './set_color.sh';
     final args = [color.value];
@@ -125,10 +134,7 @@ class _MacSystemService implements SystemService {
         rethrow;
       }
 
-      throw SystemServiceException.scriptFailure(
-        script,
-        exception: e,
-      );
+      throw SystemServiceException.scriptFailure(script, exception: e);
     }
   }
 }

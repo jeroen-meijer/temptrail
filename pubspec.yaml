@@ -1,6 +1,6 @@
 name: temptrail
 description: A CLI for Mac OS that uses AnyBar to show when your Mac is thermal throttling.
-version: 1.1.0
+version: 1.2.0
 homepage: https://github.com/jeroen-meijer/temptrail
 
 environment:
